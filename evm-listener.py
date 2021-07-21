@@ -1,6 +1,5 @@
 import os
 import json
-import psycopg2
 from flask import Flask
 from web3 import Web3, HTTPProvider
 from flask_sqlalchemy import SQLAlchemy
@@ -8,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://bkioshn:@localhost:5432/postgres"
+    SQLALCHEMY_DATABASE_URI = "postgresql://bkioshn:@localhost:5432/postgres"
 
 
 app = Flask(__name__)
@@ -26,7 +25,7 @@ class Vrf(db.Model):
     block_no = db.Column(db.Integer, nullable=False)
 
 
-def request_data(w3, cursor):
+def request_data(w3):
     # VRF provider contract
     provider_contract_id = "0xD1785fd50c2DBF77bF5F376ECc960BB0E9c19f14"
 
@@ -65,11 +64,6 @@ def main():
     w3 = Web3(HTTPProvider(
         "https://kovan.infura.io/v3/" + os.getenv("PROJECTID")))
 
-    connection = psycopg2.connect(user="postgres",
-                                  host="127.0.0.1",
-                                  port="5432",
-                                  database="postgres")
-    if w3.isConnected() and connection.status:
-        cursor = connection.cursor()
-        request_data(w3, cursor)
+    if w3.isConnected():
+        request_data(w3)
     return ''
