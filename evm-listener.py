@@ -8,7 +8,7 @@ from werkzeug.exceptions import HTTPException
 
 class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = "postgresql://bkioshn:@localhost:5432/postgres"
+    SQLALCHEMY_DATABASE_URI = "postgresql://" + os.getenv("USER") + ":" + os.getenv("PASSWORD") + "@" + os.getenv("SERVER") + ":5432/" + os.getenv("DB")
 
 
 app = Flask(__name__)
